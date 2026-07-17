@@ -21,21 +21,17 @@ public class EstudianteController {
     @GetMapping
     public List<Estudiante> listarTodos(@RequestParam(required = false) String buscar) {
         if (buscar != null && !buscar.trim().isEmpty()) {
-            // Intentamos ver si el usuario escribió una matrícula numérica
             try {
                 Long matricula = Long.parseLong(buscar.trim());
-                // Si es un número, buscamos por ID exacto
                 return estudianteRepository.findById(matricula)
-                        .map(List::of) // Si lo encuentra, lo mete en una lista
-                        .orElse(List.of()); // Si no, regresa una lista vacía
+                        .map(List::of)
+                        .orElse(List.of()); 
             } catch (NumberFormatException e) {
-                // Si NO es un número (es texto), busca por nombre o carrera
                 return estudianteRepository.findByNombreCompletoContainingIgnoreCaseOrCarreraContainingIgnoreCase(buscar, buscar);
             }
         }
-        // Si no viene ningún parámetro de búsqueda, regresa todos
         return estudianteRepository.findAll();
-    }
+    }   
 
     // 3. CREAR NUEVO 
     @PostMapping
